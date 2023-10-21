@@ -18,9 +18,10 @@ module FixedSizeArrayPool =
             // we still have room for returned arrays at the top.
             if currentIndex = 0 then
                 let oldSize = size
-                let size = oldSize + capacity
+                size <- oldSize + capacity
                 pool <- Array.zeroCreate size
 
+                // Initialize with new empty arrays from the bottom
                 for i in 0 .. capacity - 1 do
                     pool.[i] <- Array.zeroCreate arraySize
 
