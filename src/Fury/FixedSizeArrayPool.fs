@@ -4,11 +4,21 @@ open System
 
 module FixedSizeArrayPool =
     type  FixedSizeArrayPool<'T>(arraySize: int, capacity: int) =
-        let mutable currentIndex = capacity - 1
-        let mutable size = capacity
-        let mutable pool : 'T[] [] = Array.zeroCreate size
+        let mutable currentIndex: int = 0
+        let mutable size = 0
+        let mutable pool : 'T[] [] = [||]
 
         do
+            if capacity <= 0 then
+                raise (ArgumentException("Capacity must be greater than zero."))
+
+            if arraySize <= 0 then
+                raise (ArgumentException("Array size must be greater than zero."))
+
+            currentIndex <- capacity - 1
+            size <- capacity
+            pool <- Array.zeroCreate size
+
             for i in 0 .. size - 1 do
                 pool[i] <- Array.zeroCreate arraySize
     

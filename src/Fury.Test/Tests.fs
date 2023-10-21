@@ -67,3 +67,11 @@ module Tests =
         let array = Array.zeroCreate 5
 
         Assert.Throws<InvalidOperationException>(fun () -> pool.Return false array)
+
+    [<Fact>]
+    let ``Non-positive array size throws`` () =
+        Assert.Throws<ArgumentException>(fun () -> FixedSizeArrayPool<int>(0, 1) |> ignore)
+
+    [<Fact>]
+    let ``Non-positive capacity throws`` () =
+        Assert.Throws<ArgumentException>(fun () -> FixedSizeArrayPool<int>(1, 0) |> ignore)
