@@ -1,6 +1,9 @@
 # Fury
 A small library that contains a fixed size array pool.  Use the array pool to avoid garbage collection of large arrays.  This is a supplement to .NET's built-in [`ArrayPool`](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.arraypool-1?view=net-6.0) which is not fixed size.  `ArrayPool` only guarantees that the arrays are at least of the size requested.  Fury's `FixedSizeArrayPool` always returns arrays of the same size.
 
+## Installation
+Currently, there is no Nuget package or anything to install.  If you want to use `FixedArrayPool`, just grab the code from the `src` folder.
+
 ## Usage
 You create a new `FixedSizeArrayPool` by specifying the array length and the initial capacity.  The pool will initially create all arrays, i.e. they are **not** lazily created.
 ```fsharp
