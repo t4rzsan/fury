@@ -18,7 +18,7 @@ module Tests =
 
     [<Fact>]
     let ``Rent and return with clearing`` () =
-        let pool = FixedSizeArrayPool<int>(5, 1)
+        let pool = FixedSizeArrayPool<int>(arraySize = 5, capacity = 1)
         let array = pool.Rent()
         array[2] <- 42
         
