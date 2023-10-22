@@ -30,9 +30,9 @@ I decided to use `Span.Clear` to clear returned arrays.  The project `Fury.Bench
 
 | Method                | Array          | Mean          | Error      | StdDev     | Ratio |
 |---------------------- |--------------- |--------------:|-----------:|-----------:|------:|
-| LargeSystemArrayClear | Int32[1000000] |  78,950.00 ns | 257.829 ns | 241.174 ns | 1.000 |
-| LargeIterate          | Int32[1000000] | 239,555.79 ns | 660.288 ns | 617.633 ns | 3.034 |
-| LargeSpanClear        | Int32[1000000] |  77,947.21 ns | 404.416 ns | 378.291 ns | 0.987 |
-| LargeSystemArrayClear | Int32[100]     |      13.09 ns |   0.046 ns |   0.043 ns | 0.000 |
-| LargeIterate          | Int32[100]     |      29.62 ns |   0.071 ns |   0.063 ns | 0.000 |
-| LargeSpanClear        | Int32[100]     |      12.69 ns |   0.019 ns |   0.018 ns | 0.000 |
+| SystemArrayClear | Int32[1000000] |  78,950.00 ns | 257.829 ns | 241.174 ns | 1.000 |
+| Iterate          | Int32[1000000] | 239,555.79 ns | 660.288 ns | 617.633 ns | 3.034 |
+| SpanClear        | Int32[1000000] |  77,947.21 ns | 404.416 ns | 378.291 ns | 0.987 |
+| SystemArrayClear | Int32[100]     |      13.09 ns |   0.046 ns |   0.043 ns | 0.000 |
+| Iterate          | Int32[100]     |      29.62 ns |   0.071 ns |   0.063 ns | 0.000 |
+| SpanClear        | Int32[100]     |      12.69 ns |   0.019 ns |   0.018 ns | 0.000 |

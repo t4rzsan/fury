@@ -11,16 +11,16 @@ type ArrayClearBenchmark() =
         [| Array.zeroCreate 1_000_000; Array.zeroCreate 100 |]  
 
     [<Benchmark(Baseline = true)>]
-    member this.LargeSystemArrayClear() = 
+    member this.SystemArrayClear() = 
         System.Array.Clear(this.Array)
 
     [<Benchmark()>]
-    member this.LargeIterate() = 
+    member this.Iterate() = 
         for i in 0 .. this.Array.Length - 1 do
             array.[i] <- 0
 
     [<Benchmark()>]
-    member this.LargeSpanClear() = 
+    member this.SpanClear() = 
         let span = System.Span(this.Array)
         span.Clear()
 
