@@ -24,7 +24,7 @@ pool.Return clear array
 After you have returned an array to the pool, you must never use it again outside the pool.  It is now owned by the pool.
 
 ## Thread safety
-`FixedSizeArrayPool` is **not** thread safe.
+`FixedSizeArrayPool` is thread safe.
 
 ## Performance
 ### Clearing returned arrays
