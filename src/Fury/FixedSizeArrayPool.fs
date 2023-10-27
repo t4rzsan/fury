@@ -6,7 +6,6 @@ open System.Threading
 module FixedSizeArrayPool =
     type  FixedSizeArrayPool<'T>(arraySize: int, capacity: int) =
         [<DefaultValue>] static val mutable private shared : FixedSizeArrayPool<'T>
-        static let mutable count = 0
 
         let mutable currentIndex: int = 0
         let pool : 'T[] [] = Array.zeroCreate capacity
