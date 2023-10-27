@@ -1,12 +1,12 @@
 ﻿namespace Fury.Buffer
 
 open System
+open System.Threading
 
 module FixedSizeArrayPool =
     type  FixedSizeArrayPool<'T>(arraySize: int, capacity: int) =
         let mutable currentIndex: int = 0
-        let mutable size = 0
-        let mutable pool : 'T[] [] = [||]
+        let pool : 'T[] [] = Array.zeroCreate capacity
 
         do
             if capacity <= 0 then
@@ -16,29 +16,17 @@ module FixedSizeArrayPool =
                 raise (ArgumentException("Array size must be greater than zero."))
 
             currentIndex <- capacity - 1
-            size <- capacity
-            pool <- Array.zeroCreate size
 
-            for i in 0 .. size - 1 do
+            for i in 0 .. capacity - 1 do
                 pool[i] <- Array.zeroCreate arraySize
     
         member this.Rent() =
-            // If we have reached the end of the pool, resize the pool
-            // and initialize it with empty arrays from the bottom, so
-            // we still have room for returned arrays at the top.
+            // If we have reached the end of the pool, fail with an exception.
+            // Reading integers is atomic (I think).
             if currentIndex = -1 then
-                let oldSize = size
-                size <- oldSize + capacity
-                pool <- Array.zeroCreate size
+                raise (InvalidOperationException("Pool is empty."))
 
-                // Initialize with new empty arrays from the bottom
-                for i in 0 .. capacity - 1 do
-                    pool[i] <- Array.zeroCreate arraySize
-
-                currentIndex <- capacity - 1
-
-            let index = currentIndex
-            currentIndex <- currentIndex - 1
+            let index = 1 + Interlocked.Decrement(&currentIndex)
 
             let array = pool[index]
             pool[index] <- null
@@ -48,14 +36,15 @@ module FixedSizeArrayPool =
             if isNull(array) || not (array.Length = arraySize) then
                 raise (ArgumentException($"Array must be of length {arraySize}."))
 
-            if currentIndex = size - 1 then
+            let index = Interlocked.Increment(&currentIndex)
+            if index = capacity then
+                Interlocked.Decrement(&currentIndex) |> ignore
                 raise (InvalidOperationException("Pool is full."))
 
             if clear then
                 let span = Span(array)
                 span.Clear()
 
-            currentIndex <- currentIndex + 1
-            pool[currentIndex] <- array
+            pool[index] <- array
 
 
