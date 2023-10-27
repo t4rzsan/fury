@@ -5,6 +5,9 @@ open System.Threading
 
 module FixedSizeArrayPool =
     type  FixedSizeArrayPool<'T>(arraySize: int, capacity: int) =
+        [<DefaultValue>] static val mutable private shared : FixedSizeArrayPool<'T>
+        static let mutable count = 0
+
         let mutable currentIndex: int = 0
         let pool : 'T[] [] = Array.zeroCreate capacity
 
@@ -19,7 +22,13 @@ module FixedSizeArrayPool =
 
             for i in 0 .. capacity - 1 do
                 pool[i] <- Array.zeroCreate arraySize
-    
+
+        static member Shared
+            with get () = FixedSizeArrayPool.shared
+            
+        static member CreateShared (arraySize: int, capacity: int) =
+            FixedSizeArrayPool.shared <- FixedSizeArrayPool(arraySize, capacity)
+        
         member this.Rent() =
             // If we have reached the end of the pool, fail with an exception.
             // Reading integers is atomic (I think).
@@ -46,5 +55,3 @@ module FixedSizeArrayPool =
                 span.Clear()
 
             pool[index] <- array
-
-
