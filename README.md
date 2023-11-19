@@ -23,8 +23,30 @@ pool.Return clear array
 ```
 After you have returned an array to the pool, you must never use it again outside the pool.  It is now owned by the pool.
 
+### Why does `FixedSizeArrayPool` not have a property like [`ArrayPool.Shared`](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.arraypool-1.shared?view=net-7.0)?
+It would not make any sense to add a `Shared` static property to `FixedSizeArrayPool` because it would only be able to hold a specific size arrays.  Instead you can roll your own global registry like so:
+```fsharp
+type FixedSizeArrayRegistry() =
+    static let shared100 = FixedSizeArrayPool(100, 500)
+    static let shared200 = FixedSizeArrayPool(200, 500)
+
+    static member Shared100
+        with get () = shared100
+
+    static member Shared200
+        with get () = shared200
+```
+
+Then you can use it like so:
+```fsharp
+let pooledArrayOfLength100 = FixedSizeArrayRegistry.Shared100.Rent ()
+```
+
+### Exceptions
+`FixedSizeArrayPool` will throw exceptions if you rent more arrays than the `capacity`, and if you try to return more than `capacity` arrays.  Also, you cannot return arrays of incorrect length.
+
 ## Thread safety
-`FixedSizeArrayPool` is **not** thread safe.
+`FixedSizeArrayPool` is thread safe.
 
 ## Performance
 ### Clearing returned arrays
